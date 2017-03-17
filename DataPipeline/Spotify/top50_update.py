@@ -1,8 +1,8 @@
-#import requests
 from oauthlib.oauth2 import BackendApplicationClient
 from requests_oauthlib import OAuth2Session
+from pymongo import MongoClient
 
-#Gets the playlist specified in the url that is passed in. Returns the response object
+#Gets the playlist specified in the url that is passed in. Returns the response object.
 def get_playlist(url):
 	#OAuth2 information
 	login_info = []
@@ -32,38 +32,58 @@ def response_parse(res):
 		song["track_album"] = i["track"]["album"]["name"]
 		song["album_cover"] = i["track"]["album"]["images"]
 		song["preview_url"] = i["track"]["preview_url"]
-		'''
-		#Need: Rank, Track ID, Name, Artist, Album, Album URL, Preview URL
-		f_o.write("------------------" + "\n")
-		f_o.write("Rank:" + str(rank+1) + "\n")
-		f_o.write("ID:" + str(i["track"]["id"]) + "\n")
-		
-		f_o.write("Name:" + str(i["track"]["name"]) + "\n")
-		f_o.write("Artist:" + str(i["track"]["artists"][0]["name"]) + "\n")
-		
-		f_o.write("Album:" + str(i["track"]["album"]["name"]) + "\n")
-		
-		f_o.write("Cover:" + str(i["track"]["album"]["images"]) + "\n")
-		f_o.write("Preview:" + str(i["track"]["preview_url"]) + "\n")
-		'''
 		song_list.append(song)
 
 	return song_list
 			
+#Function that takes in a list of dicts and writes them to a mongodb collection. Takes in a dict of mongodb settings {"ip":"localhost" or ip, "port":27017 is default, "db":"name of db", "collection":"Name of collection"} and the list to write.
+def mongo_write(mongo_settings, items):
+	#Create connection to Mongo
+	client = MongoClient(mongo_settings["ip"], mongo_settings["port"]) #client = MongoClient('mongodb://localhost:27017/') also works
+	#Connect to a database
+	db = client[mongo_settings["db"]] #Can use db = client["test-db"] to select dbs that don't use attribute style access
+	#Connect to the collection you want
+	collection = db[mongo_settings["collection"]] #Dictionary style access works here too: collection = db['test-collection']
+	#Insert the list of documents
+	post_id = collection.insert_many(items)
+	#Print the _id of each doc inserted
+	#print(post_id.inserted_ids)
+
+#Naively drops the collection passed in. Takes in a dict of mongodb settings {"ip":"localhost" or ip, "port":27017 is default, "db":"name of db", "collection":"Name of collection"}.
+def mongo_drop_coll(mongo_settings):
+	#Create connection to Mongo
+	client = MongoClient(mongo_settings["ip"], mongo_settings["port"]) #client = MongoClient('mongodb://localhost:27017/') also works
+	#Connect to a database
+	db = client[mongo_settings["db"]] #Can use db = client["test-db"] to select dbs that don't use attribute style access
+	#Connect to the collection you want
+	collection = db[mongo_settings["collection"]]
+	#Delete all documents in the collection we are connected to
+	result = collection.delete_many({})
+	print("Deleted", result.deleted_count, "documents")
+
 
 
 if __name__ == "__main__":
 	#Url of the top 50 US chart already formatted for api usage
 	url = "https://api.spotify.com/v1/users/spotifycharts/playlists/37i9dQZEVXbLRQDuF5jeBp/tracks"
+	#Get the playlist from Spotify using GET. Oauth is done in the function, loaded from spot_cred.txt, where line 1 is the id, line 2 is the secret
 	res = get_playlist(url)
 	#Check if the response has the expected number of results (50)
 	if res.json()["total"] == 50:
 		print("GET success")
 		song_list = response_parse(res)
-		for i in song_list:
-			print("-----------------------")
-			[print(j, str(i[j])) for j in i]
+		mongo_settings = {
+		"ip":"localhost",
+		"port":27017,
+		"db":"litmaps",
+		"collection":"top50"
+		}
+		#Blindly drop the old top50 collection, anything in this if black assumes that we received 50 valid responses to our GET request. Resonable assumption to make.
+		mongo_drop_coll(mongo_settings)
+		#Write the new top50 list to the newly emptied collection
+		mongo_write(mongo_settings, song_list)
 
-
+	#If get returns a response with less than 50 results, print failure
 	else:
-		print("Get failure or abnormality")
+		print("Get failure or abnormality. Response:")
+		print(res.json())
