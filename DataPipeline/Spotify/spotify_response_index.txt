@@ -1,0 +1,45 @@
+	'''
+	r.json():
+		total - number of results returned. 50 for top 50
+		offset - offset of results. probably for when getting multiple responses from multiple sequential calls
+		limit - max number of items tha can be returned. 100
+		next - probably token that can be passed to get next set of results. Not needed for top 50
+		items - Results of get call. Further defined below
+		href - url of request
+		previous - probably token of previous set of results
+
+	items:
+		added_by - Who added the track. None for the top 50 list items
+		is_local - If the track is local to the users machine. False for top 50 items
+		track - Information about the track. Further defined below
+		added_at - None for top 50
+
+	track:
+		artists - List. item[0] is {type:artist, href:artist url, external_urls:artist url for users, uri:artist uri, id:artist id, name:Artist name}
+		available_markets - List of country codes where the song is available
+		external_ids - {isrc: string}
+		explicit - Boolean
+		external_urls - {spotify:open.spotify urls}
+		id - track id
+		preview_url - url
+		type - type of entry. track for top 50 songs
+		name - Name of song
+		href - api url of track
+		popularity - number. Represents apotifys percieved popularity
+		uri - spotify uri
+		track_number - Number of track on album
+		duration_ms - Length of song in ms
+		disc_number - Number of disc in series
+		album - Large response similar to track. Further defined below
+	album
+		artists - List. item[0] is {name:artist name, hfre:artist api url, uri: artist uri, type:artist, id:artist id, external_urls:{spotify:open.apotify link}}
+		type - album
+		external_urls - {spotify: open.spotify url}
+		href - api.spotify url
+		name - Name of the album
+		album_type - album
+		id - album id
+		uri - album uri
+		available_markets - List of available markets
+		images - [{height:640, width:640, url:url}, {height:300, width:300, url:url}, {height:64, width:64, url:url}]
+	'''
