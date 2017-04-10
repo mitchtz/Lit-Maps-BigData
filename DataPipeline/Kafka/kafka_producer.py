@@ -2,9 +2,7 @@
 #Kafka producer that gets Tweets from GNIP, then pushes them to Kafka. Will be threaded, reads what needs to be updated from Mongo
 #key = track_id -> ints, %#partitions, must be bytes
 from kafka import KafkaProducer
-import json
-import threading
-import requests
+import json, threading, requests, time
 from queue import Queue
 from pymongo import MongoClient
 
@@ -78,7 +76,7 @@ def get_top50(mongo_settings):
 
 #Function to retrieve tweets based on song info. pushes data to Kafka. Returns the timestamp of the latest tweet retrieved
 def get_tweets(song_info, gnip_settings):
-	search_params = {'query':'' + song_info["track_name"] + ' has:geo place_country:us lang:en', 'maxResults':'500'}
+	search_params = {'query':'' + song_info["track_name"] + ' has:geo place_country:us lang:en', 'maxResults':'500', "fromDate":"201703100000"}
 	#num_responses = 0
 	resp_list = []
 	#temp = []
@@ -125,7 +123,7 @@ def worker(work_queue, kafka_settings, gnip_settings):
 
 if __name__ == "__main__":
 	#Number of threads to spawn
-	num_threads = 1
+	num_threads = 4
 	#Kafka setting information
 	kafka_settings = {
 	"topic":"test",
@@ -151,6 +149,8 @@ if __name__ == "__main__":
 	#Create work queue that stores songs to retrieve and info about them
 	work_queue = Queue()
 	print("Retrieving song info and filling queue")
+	start = time.time()
+
 	#Get list of songs and info about their last updates from mongo
 	songs = get_top50(mongo_settings)
 	top50_songs = []
@@ -165,12 +165,15 @@ if __name__ == "__main__":
 		#print(i["latest"])
 		print("------------------------")
 		'''
-		top50_songs.append({"track_id":i["track_id"], "track_name":i["track_name"].split("(")[0]})
+		track = i["track_name"].split("(")[0]
+		if track[-1] == " ":
+			track = track[:-1]
+
+		top50_songs.append({"track_id":i["track_id"], "track_name":track})
 
 	
 	#Fill queue
-	#[work_queue.put(i) for i in top50_songs]
-	work_queue.put(top50_songs[19])
+	[work_queue.put(i) for i in top50_songs[:5]]
 	#List of children processes
 	children = []
 	print("--Spawning", num_threads, "children")
@@ -181,7 +184,7 @@ if __name__ == "__main__":
 
 	#Wait for all threads to finish work
 	work_queue.join()
-
+	print(time.time()-start, "seconds to run")
 	'''
 	num_partitions = 1
 	producer = KafkaProducer()#key_serializer=lambda v: bytes(v), bootstrap_servers='localhost:9092'
