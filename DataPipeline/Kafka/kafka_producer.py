@@ -4,12 +4,48 @@
 from kafka import KafkaProducer
 import json
 import threading
+import requests
 from queue import Queue
 from pymongo import MongoClient
 
 #Function that takes in a dict and returns a bytes object (utf-8) ready for Kafka
 def dict_to_bytes(dict_in):
 	return bytes(json.dumps(dict_in), "utf-8")
+
+def response_to_list(res):
+	tweet_list = []
+	for i in res.json()["results"]:
+		temp_list = {}
+		temp_list["place"] = i["place"]
+		temp_list["user"] = i["user"]
+		temp_list["id_str"] = i["id_str"]
+		temp_list["coordinates"] = i["coordinates"]
+		temp_list["id"] = i["id"]
+		temp_list["text"] = i["text"]
+		temp_list["geo"] = i["geo"]
+		temp_list["lang"] = i["lang"]
+		temp_list["created_at"] = i["created_at"]
+		temp_list["retweet_count"] = i["retweet_count"]
+		temp_list["retweeted"] = i["retweeted"]
+		#temp_list["quote_count"] = i["quote_count"]
+		#temp_list["favorited"] = i["favorited"]
+		temp_list["reply_count"] = i["reply_count"]
+
+		tweet_list.append(temp_list)
+		'''
+		print("------------------")
+		print("place:", i["place"][""])
+		#print("user:", i["user"])
+		#print("id_str:", i["id_str"])
+		print("coordinates:", i["coordinates"])
+		print("id:", i["id"])
+		print("text:", i["text"])#.encode("utf-8"))
+		print("geo:", i["geo"])
+		print("lang:", i["lang"])
+		print("created_at:", i["created_at"])
+		#print("retweet_count:", i["retweet_count"])
+		'''
+	return tweet_list
 
 #Retreives all entries in the top50 table and get the most recent tweet for each song returns the list of dicts
 def get_top50(mongo_settings):
@@ -48,22 +84,25 @@ def get_tweets(song_info, gnip_settings):
 	#temp = []
 	#Loop that searches GNIP, then continues to get results until there is no next token.
 	while True:
-		try:
-			#Get response
-			response = response = requests.get(url, params=search_params, auth=())
-			#Parse response and then add the dicts to the list of results
-			resp_list.extend(response_to_list(response))
-			##num_responses += 1
-			#Check if we received a next token, if so, add to the search_params. Otherwise end the loop
-			if "next" in response.json():
-				search_params["next"] = response.json()["next"]
-			else:
-				#temp = response.json()["results"][0]
-				break
+		#try:
+		#Get response
+		response = requests.get(gnip_settings["url"], params=search_params, auth=(gnip_settings["user"], gnip_settings["pass"]))
+		#Parse response and then add the dicts to the list of results
+		resp_list.extend(response_to_list(response))
+		##num_responses += 1
+		#Check if we received a next token, if so, add to the search_params. Otherwise end the loop
+		if "next" in response.json():
+			search_params["next"] = response.json()["next"]
+		else:
+			#temp = response.json()["results"][0]
+			break
+		'''
 		except:
 			#print(response)
 			print("Failed to GET from GNIP")
 			break
+		'''
+
 
 		##if num_responses%5 == 0:
 			##print("Responses Read:", num_responses)
@@ -80,7 +119,7 @@ def worker(work_queue, kafka_settings, gnip_settings):
 		tweets = get_tweets(song_info, gnip_settings)
 		#print("Done:", item)
 		work_queue.task_done()
-		print("Updated", song_info["track_name"], "| # Responses:", len(tweets))
+		print("Updated", song_info["track_name"], "| Responses:", len(tweets))
 
 
 
