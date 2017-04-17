@@ -10,26 +10,49 @@ from pymongo import MongoClient
 def dict_to_bytes(dict_in):
 	return bytes(json.dumps(dict_in), "utf-8")
 
-def response_to_list(res):
+#Takes in a reseponse from GNIP and returns a list of tweets with only necessary information
+def response_parer_weird(res, song_info):
 	tweet_list = []
 	for i in res.json()["results"]:
-		temp_list = {}
-		temp_list["place"] = i["place"]
-		temp_list["user"] = i["user"]
-		temp_list["id_str"] = i["id_str"]
-		temp_list["coordinates"] = i["coordinates"]
-		temp_list["id"] = i["id"]
-		temp_list["text"] = i["text"]
-		temp_list["geo"] = i["geo"]
-		temp_list["lang"] = i["lang"]
-		temp_list["created_at"] = i["created_at"]
-		temp_list["retweet_count"] = i["retweet_count"]
-		temp_list["retweeted"] = i["retweeted"]
-		#temp_list["quote_count"] = i["quote_count"]
-		#temp_list["favorited"] = i["favorited"]
-		temp_list["reply_count"] = i["reply_count"]
+		temp_dict = {}
+		temp_dict["body"] = i["body"]
+		#temp_dict["gnip"] = i["gnip"]
+		#temp_dict["actor"] = i["actor"]
+		temp_dict["postedTime"] = i["postedTime"]
+		temp_dict["location"] = i["location"]
+		temp_dict["tweet_id"] = i["id"].split(":")[2]
+		temp_dict["prefUsername"] = i["actor"]["preferredUsername"]
+		temp_dict["track_id"] = song_info["track_id"]
+		tweet_list.append(temp_dict)
+	return tweet_list
 
-		tweet_list.append(temp_list)
+#Takes in a response from GNIP and returns a list of tweets with basic information persisted
+#This is for the old api
+def response_parer(res, song_info):
+
+	tweet_list = []
+	for i in res.json()["results"]:
+		if "place" in i:
+			#[print(j, i[j]) for j in i]
+			#print("----------------")
+			temp_list = {}
+			temp_list["place"] = i["place"]
+			temp_list["user"] = i["user"]
+			temp_list["id_str"] = i["id_str"]
+			temp_list["coordinates"] = i["coordinates"]
+			temp_list["tweet_id"] = i["id"]
+			temp_list["text"] = i["text"]
+			temp_list["geo"] = i["geo"]
+			temp_list["lang"] = i["lang"]
+			temp_list["created_at"] = i["created_at"]
+			temp_list["retweet_count"] = i["retweet_count"]
+			temp_list["retweeted"] = i["retweeted"]
+			#temp_list["quote_count"] = i["quote_count"]
+			#temp_list["favorited"] = i["favorited"]
+			temp_list["reply_count"] = i["reply_count"]
+			temp_list["track_id"] = song_info["track_id"]
+
+			tweet_list.append(temp_list)
 		'''
 		print("------------------")
 		print("place:", i["place"][""])
@@ -76,7 +99,8 @@ def get_top50(mongo_settings):
 
 #Function to retrieve tweets based on song info. pushes data to Kafka. Returns the timestamp of the latest tweet retrieved
 def get_tweets(song_info, gnip_settings):
-	search_params = {'query':'' + song_info["track_name"] + ' has:geo place_country:us lang:en', 'maxResults':'500', "fromDate":"201703100000"}
+	print("Searching:", song_info["track_name"])
+	search_params = {'query':'' + song_info["track_name"] + ' has:geo place_country:us lang:en', 'maxResults':'500'}#, "fromDate":"201703100000"}# 'maxResults':'500',
 	#num_responses = 0
 	resp_list = []
 	#temp = []
@@ -86,8 +110,11 @@ def get_tweets(song_info, gnip_settings):
 		#Get response
 		response = requests.get(gnip_settings["url"], params=search_params, auth=(gnip_settings["user"], gnip_settings["pass"]))
 		#Parse response and then add the dicts to the list of results
-		resp_list.extend(response_to_list(response))
-		##num_responses += 1
+		if "results" in response.json():
+			resp_list.extend(response_parer(response, song_info))
+
+			##resp_list.extend(response_parer(response, song_info))
+			##num_responses += 1
 		#Check if we received a next token, if so, add to the search_params. Otherwise end the loop
 		if "next" in response.json():
 			search_params["next"] = response.json()["next"]
@@ -100,13 +127,36 @@ def get_tweets(song_info, gnip_settings):
 			print("Failed to GET from GNIP")
 			break
 		'''
-
-
 		##if num_responses%5 == 0:
-			##print("Responses Read:", num_responses)
-		
+			##print("Responses Read:", num_responses)		
 
 	return resp_list
+
+#Function that takes in a list of tweets and puts them into Kafka
+def kafka_push(kafka_settings, tweets):
+	producer = KafkaProducer()#key_serializer=lambda v: bytes(v), bootstrap_servers='localhost:9092'
+	#Create connection to Mongo
+	client = MongoClient(mongo_settings["ip"], mongo_settings["port"]) #client = MongoClient('mongodb://localhost:27017/') also works
+	#Connect to a database
+	db = client[mongo_settings["db"]] #Can use db = client["test-db"] to select dbs that don't use attribute style access
+	#Connect to the collection you want
+	##collection = db["1parttest"]
+	for i in tweets:
+		'''
+		tweet_b = dict_to_bytes(i)
+		tweet = dict(json.loads(tweet_b.decode("utf-8")))
+		post_id = collection.update({"id":tweet["id"]}, tweet, True)
+		'''
+		
+		#Convert all chars of track_id into numbers, sum them and use this number and % with the number of partitions to determine what partiton to send to
+		part_hash = sum([ord(ch) for ch in str(i["tweet_id"])])%kafka_settings["partitions"]
+		#part_hash = i["id"]%kafka_settings["partitions"]
+		future = producer.send(kafka_settings["topic"], key=bytes(part_hash), value=dict_to_bytes(i))
+		#Block until a single message is sent, or timeout
+		result = future.get(timeout=60)
+		
+	
+
 
 #Worker to manage thread, runs logic loop until all items have been pulled from queue
 def worker(work_queue, kafka_settings, gnip_settings):
@@ -115,6 +165,8 @@ def worker(work_queue, kafka_settings, gnip_settings):
 		#print("Working on:", item)
 		#Take in song info to retrieve, then retreive and send all responses to Kafka. Returns time of latest tweet retrieved
 		tweets = get_tweets(song_info, gnip_settings)
+		#Send tweets to kafka
+		kafka_push(kafka_settings, tweets)
 		#print("Done:", item)
 		work_queue.task_done()
 		print("Updated", song_info["track_name"], "| Responses:", len(tweets))
@@ -123,11 +175,11 @@ def worker(work_queue, kafka_settings, gnip_settings):
 
 if __name__ == "__main__":
 	#Number of threads to spawn
-	num_threads = 4
+	num_threads = 2
 	#Kafka setting information
 	kafka_settings = {
-	"topic":"test",
-	"partitions":1
+	"topic":"3parttest",
+	"partitions":3
 	}
 	#Mongo setting information
 	mongo_settings = {
@@ -185,13 +237,3 @@ if __name__ == "__main__":
 	#Wait for all threads to finish work
 	work_queue.join()
 	print(time.time()-start, "seconds to run")
-	'''
-	num_partitions = 1
-	producer = KafkaProducer()#key_serializer=lambda v: bytes(v), bootstrap_servers='localhost:9092'
-	for i in range(10):
-		dic = {}
-		dic["test"] = i
-		future = producer.send("test", key=bytes(i%num_partitions), value=dict_to_bytes(dic))
-		#Block until a single message is sent, or timeout
-		result = future.get(timeout=60)
-	'''
