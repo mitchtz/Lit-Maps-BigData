@@ -1,23 +1,3 @@
-<!--<nav class="navbar navbar-default">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-      <a class="navbar-brand" href="#">Lit Maps</a>
-    </div>
-    <div id="navbar" class="collapse navbar-collapse">
-      <ul class="nav navbar-nav navbar-right">
-        <li><a>Tech Used</a></li>
-        <li><a>About</a></li>
-      </ul>
-    </div>
-  </div>
-</nav>
--->
 <div id="navbar-green">
   <nav class="navbar navbar-ct-green" role="navigation">
     <div class="container-fluid">
@@ -36,13 +16,13 @@
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav navbar-right">
           <li>
-            <a href="#">
+            <a [routerLink]="['/tech']">
               <i class="pe-7s-global"></i>
               <p>Tech Used</p>
             </a>
           </li>
           <li>
-            <a href="#">
+            <a [routerLink]="['/about']">
               <i class="pe-7s-user"></i>
               <p>About</p>
             </a>
