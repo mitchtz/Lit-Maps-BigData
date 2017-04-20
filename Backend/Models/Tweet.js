@@ -1,12 +1,13 @@
 const mongoose = require('mongoose')
 
 const tweetSchema = new mongoose.Schema({
-  songID: {type: mongoose.Schema.Types.ObjectId, ref: 'Song'},
+  track_id: String,
+  tweet_id: Number,
+  location: {lat: Number, lon: Number},
   lat: String,
   long: String,
-  date: Date,
-  sentiment: Number
+  sentiment: Number,
+  created_at: Date
 }, { timestamps: true })
 
-const Tweet = mongoose.model('Tweet', tweetSchema)
-module.exports = Tweet
+module.exports = mongoose.model('Tweet', tweetSchema, 'tweets')
