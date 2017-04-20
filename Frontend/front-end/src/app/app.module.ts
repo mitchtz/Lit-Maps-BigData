@@ -12,6 +12,9 @@ import { MapComponent } from './components/map/map.component';
 import { TechComponent } from './components/tech/tech.component';
 import { JumbotronComponent } from './components/jumbotron/jumbotron.component';
 
+import {SongsService} from './services/songs.service';
+import { OrderByPipe } from './pipes/order-by.pipe';
+
 const appRoutes: Routes = [
     {path:'', component: CardComponent},
     {path:'tech', component: TechComponent},
@@ -28,7 +31,8 @@ const appRoutes: Routes = [
     CardComponent,
     MapComponent,
     TechComponent,
-    JumbotronComponent
+    JumbotronComponent,
+    OrderByPipe
   ],
   imports: [
     BrowserModule,
@@ -36,7 +40,7 @@ const appRoutes: Routes = [
     HttpModule,
     RouterModule.forRoot(appRoutes)
   ],
-  providers: [],
+  providers: [SongsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

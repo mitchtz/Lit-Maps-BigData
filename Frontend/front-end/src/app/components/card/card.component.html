@@ -1,17 +1,11 @@
 <div class="row">
-  <div id="accordion" role="tablist" aria-multiselectable="true">
-    <div class="col-sm-4 card">
+    <div class="col-sm-2 card" *ngFor="let song of songs">
       <div class="card-header" role="tab">
-        <img src="https://i.scdn.co/image/4dea3b52b629d0e0098261101aa007fdd88e30b8" [routerLink]="['/map']">
-        <h4><b>Humble.</b></h4>
-        <p>Kendrick Lamar</p>
-        <p>Humble Single</p>
+        <img src="{{song.album_cover[0].url}}" [routerLink]="['/map']">
+        <h4><b>{{song.track_name}}</b></h4>
+        <p>{{song.track_artist}}</p>
+        <p>{{song.track_album}}</p>
+        <p><b>{{song.rank}}</b></p>
       </div>
     </div>
 </div>
-
-<!--<div class="row">
-  <div class="col-sm-2 card collapse" id="demo">
-    <app-map></app-map>
-  </div>
-</div>-->
