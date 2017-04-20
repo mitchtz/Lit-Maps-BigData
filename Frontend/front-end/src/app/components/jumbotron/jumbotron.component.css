@@ -1,0 +1,119 @@
+html, body {
+  font-family: 'Nunito', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #161718;
+}
+
+h1, h2, p, a, h3 {
+  color: white;
+}
+
+p, .footer{
+  font-weight: 300;
+}
+
+.container {
+  max-width: 1000px;
+}
+
+/***JUMBOTRON***/
+
+.jumbotron {
+  background-image: "taylor_swift.jpg" no-repeat center center;
+  background-size: cover;
+  height: 550px;
+}
+
+.jumbotron img {
+  padding-left: 10px;
+}
+
+.jumbotron .container h1 {
+  padding-top: 80px;
+  color: white;
+}
+
+.jumbotron li {
+  display: inline;
+  list-style: none;
+  margin-left: 40px;
+}
+.jumbotron a {
+  font-size: 15px;
+}
+.jumbotron a:hover {
+  color: white;
+}
+.jumbotron .btn{
+  background-color: #ff003d;
+  color: white;
+  border-radius: 0;
+  border-color: #ff003d;
+  padding: 7px 30px;
+}
+
+.jumbotron .btn:hover{
+  color: inherit;
+}
+
+.jumbotron .download {
+  margin-top: 20px;
+}
+
+/***SUPPORTING***/
+.supporting{
+  padding-bottom: 70px;
+  padding-top: 70px;
+
+}
+.supporting .container{
+  padding-left: 50px;
+  padding-right: 50px;
+}
+.supporting img {
+  margin: auto auto;
+}
+
+.supporting-2 {
+  background: black;
+}
+
+.supporting-4{
+  background: url("https://s3.amazonaws.com/codecademy-content/projects/bass/feature.jpg") no-repeat center center;
+  background-size: cover;
+  height: 350px;
+  text-align: center;
+}
+.supporting-4 .container{
+  padding-top: 110px;
+}
+
+/***FOOTER***/
+.footer {
+  background-color: #000;
+  height: 220px;
+}
+
+.footer .container{
+  padding-top: 50px;
+}
+.footer li {
+  margin-top: 7px;
+  list-style: none;
+}
+
+.footer h3{
+  font-size: 17px;
+}
+
+.footer a{
+  font-size: 13px;
+  color: #aaa;
+}
+
+@media (max-width:768px){
+  .footer {
+    display: none;
+  }
+}
