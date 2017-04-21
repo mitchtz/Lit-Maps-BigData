@@ -10,15 +10,19 @@ import { SongsService } from '../../services/songs.service';
 export class CardComponent implements OnInit {
   songs: any = [];
 
+  clicked(variable) {
+    console.log(variable);
+  }
+
   constructor(private songsService: SongsService) { }
 
   ngOnInit() {
     // Retrieve posts from the API
     this.songsService.getAllSongs().subscribe(songs => {
-    this.songs = songs.songs.sort(function(a, b) {
-    return parseFloat(a.rank) - parseFloat(b.rank);
-});;
-  });
-}
+      this.songs = songs.songs.sort(function(a, b) {
+        return parseFloat(a.rank) - parseFloat(b.rank);
+      });;
+    });
+  }
 
 }

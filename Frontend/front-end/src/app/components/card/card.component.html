@@ -1,11 +1,14 @@
 <div class="row">
-    <div class="col-sm-2 card" *ngFor="let song of songs">
+  <div *ngFor="let song of songs; let i = index">
+    <div class="center clearfix" *ngIf="i % 4 == 0"></div>
+    <div class="col-sm-3 card">
       <div class="card-header" role="tab">
-        <img src="{{song.album_cover[0].url}}" [routerLink]="['/map']">
-        <h4><b>{{song.track_name}}</b></h4>
+        <img src="{{song.album_cover[0].url}}" (click)="clicked(song.track_id)" [routerLink]="['/map']">
+        <h4><b>({{song.rank}}) {{song.track_name}}</b></h4>
         <p>{{song.track_artist}}</p>
         <p>{{song.track_album}}</p>
-        <p><b>{{song.rank}}</b></p>
       </div>
     </div>
+
+  </div>
 </div>

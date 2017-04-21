@@ -1,0 +1,180 @@
+
+.SPWidget .link-to-song
+{
+    color: inherit;
+    position: absolute;
+    left: 20px;
+    bottom: 10px;
+}
+
+.SPWidget .link-to-song i
+{
+    font-size: 30px;
+}
+
+.SPWidget {
+    position: relative;
+    width: 400px;
+    height: 200px;
+    margin: 50px auto 0 auto;
+    background: rgba(80, 218, 101, 1);
+    -webkit-box-shadow: -1px 17px 89px 6px rgba(0,0,0,0.33);
+    -moz-box-shadow: -1px 17px 89px 6px rgba(0,0,0,0.33);
+    box-shadow: -1px 17px 89px 6px rgba(0,0,0,0.33);
+    display: flex;
+    text-align: center;
+    font-family: "Roboto", Helvetica;
+    color: white;
+    text-transform: uppercase;
+    flex-direction: row;
+}
+
+.SPWidget.vertical
+{
+    width: 200px;
+    height: 400px;
+    flex-direction: column;
+}
+
+.SPWidget img {
+    width: 200px;
+    height: 200px;
+}
+
+.SPWidget .link-to-song
+{
+    color: inherit;
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+}
+
+.SPWidget .link-to-song i
+{
+    font-size: 30px;
+    text-shadow: 2px 2px 2px #2C2C2C;
+}
+
+.SPWidget #info {
+    position: relative;
+    width: calc(100%/2);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-self: center;
+    border-top: 7px solid white;
+    border-right: 7px solid white;
+    border-left: 7px solid white;
+    box-sizing: border-box;
+}
+
+.SPWidget .artist {
+    font-size: 25px;
+    margin-top: 10px;
+}
+
+.SPWidget .song-name {
+    font-size: 13px;
+    font-style: italic;
+    padding: 0 8px;
+    max-height: 30px;
+    overflow: hidden;
+}
+
+.SPWidget #play-button {
+    height: 40px;
+    width: 40px;
+    background: transparent;
+    border: 4px solid white;
+    border-radius: 50%;
+    align-self: center;
+    margin-top: 13px;
+    color: black;
+    text-align: center;
+    cursor: pointer;
+    transition: box-shadow 0.5s ease-in-out;
+}
+
+.SPWidget #play-button:hover{box-shadow: 0px 0px 5px 4px rgba(255,255,255,0.33);}
+
+.SPWidget #play-button i
+{
+    font-size: 15px;
+    margin: 12px 0 0 0;
+    color: white;
+}
+
+.SPWidget #play-button i.fa.fa-play
+{
+    margin: 12px -4px 0 0;
+}
+
+.SPWidget #timeline
+{
+    position: absolute;
+    bottom: 0;
+    height: 7px;
+    width: 100%;
+    margin:0;
+    background: white;
+    /*margin-top: 60px;*/
+
+}
+
+.SPWidget #playhead
+{
+    left:0;
+    bottom: 0;
+    position: absolute;
+    height:7px;
+    width: 7px;
+    background: black;
+    transition: all 0.5s linear;
+
+}
+
+.SPWidget .bars
+{
+    width: 25px;
+    height: 25px;
+    align-self: center;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+}
+
+.SPWidget .bars .bar
+{
+    width: 7px;
+    height:2px;
+    background-color: white;
+    animation: bar-jump 0.5s infinite ease-in;
+    animation-play-state: paused;
+}
+.SPWidget .bars.playing .bar {animation-play-state:running;}
+.SPWidget .bars.paused .bar {animation-play-state: paused; }
+.SPWidget .bars .bar.one { animation-delay: 0.15s; }
+.SPWidget .bars .bar.two { animation-delay: 0.1s;  }
+.SPWidget .bars .bar.three { animation-delay: 0.35s;  }
+
+
+@keyframes bar-jump {
+
+    0%
+    {
+        height:10px;
+    }
+    50%
+    {
+        height:16px;
+    }
+    75%
+    {
+        height: 5px;
+    }
+    100%
+    {
+        height: 10px;
+    }
+}
