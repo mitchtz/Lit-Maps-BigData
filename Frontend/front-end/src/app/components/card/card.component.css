@@ -3,7 +3,9 @@
   font-family: "Roboto", Helvetica;
   transition: 0.3s;
   margin: 0px;
-  padding: 5px;
+  padding: 0px;
+  background-color: #383838 !important;
+  color: #fff;
 }
 
 .center {
@@ -19,7 +21,8 @@
 }
 
 .card:hover {
-  box-shadow: 0 64px 128px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0 64px 128px 0 rgba(0, 0, 0, 0);
+  background-color: #585858 !important;
 }
 
 .card img {
