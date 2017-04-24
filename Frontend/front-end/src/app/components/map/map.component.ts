@@ -1,4 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, Output, OnInit, ElementRef } from '@angular/core';
+import { SongsService } from '../../services/songs.service';
+import { TrackId } from '../../services/trackId';
+
+declare var SPWidget: any;
 
 @Component({
   selector: 'app-map',
@@ -6,15 +10,18 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./map.component.css']
 })
 export class MapComponent implements OnInit {
-
-  constructor() { }
+  trackId: TrackId;
+  constructor(private songsService: SongsService, private elementRef:ElementRef) { }
 
   ngOnInit() {
-    //   var widget = new SPWidget({
-    //             songId:'7KXjTSCq5nL1LoYtL7XAwS',
-    //             primaryColor: 'rgba(80, 218, 101, 1)',
-    //             element:"#myWidget"
-    //         }).start();
+    this.trackId = this.songsService.trackId;
+    // Render widget based on track id
+    var widget = new SPWidget({
+              songId:this.trackId,
+              songRank: this,
+              primaryColor: 'rgba(30, 215, 96, 1)',
+              element:"#myWidget"
+    }).start();
 
   }
 

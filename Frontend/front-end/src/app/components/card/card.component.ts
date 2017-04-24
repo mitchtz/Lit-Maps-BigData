@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { SongsService } from '../../services/songs.service';
+import { TrackId } from '../../services/trackId';
 
 
 @Component({
@@ -7,12 +8,17 @@ import { SongsService } from '../../services/songs.service';
   templateUrl: './card.component.html',
   styleUrls: ['./card.component.css']
 })
-export class CardComponent implements OnInit {
+export class CardComponent implements OnInit, OnDestroy {
   songs: any = [];
+  currentTrack: string;
+  trackId: TrackId = {
+    trackId: ""
+  };
 
   clicked(variable) {
     console.log(variable);
   }
+
 
   constructor(private songsService: SongsService) { }
 
@@ -22,7 +28,12 @@ export class CardComponent implements OnInit {
       this.songs = songs.songs.sort(function(a, b) {
         return parseFloat(a.rank) - parseFloat(b.rank);
       });;
+      this.trackId = this.songs.track_id;
     });
+  }
+
+  ngOnDestroy() {
+    this.songsService.trackId = this.trackId;
   }
 
 }
