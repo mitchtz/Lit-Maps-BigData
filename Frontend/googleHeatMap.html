@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Heatmaps</title>
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 350px;
+        width: 800px;
+      }
+      /* Optional: Makes the sample page fill the window. */
+   html, body {
+        height: 450px;
+        width: 700px;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="map"></div>
+    <script>
+
+      var map, heatmap, unitedStatesOfAmerica;
+      
+      function initMap() {
+        unitedStatesOfAmerica= new google.maps.LatLng(39.8282,-98.5795);
+        map = new google.maps.Map(document.getElementById('map'), {
+          zoom:4,
+          center: unitedStatesOfAmerica,
+        });
+
+        heatmap = new google.maps.visualization.HeatmapLayer({
+          data: getPoints(),
+          map: map
+        });
+      }
+
+//Heatmap Data
+      function getPoints() {
+        return [new google.maps.LatLng(37.753837, -122.403172),
+          new google.maps.LatLng(37.752986, -122.403112),
+          new google.maps.LatLng(37.751266, -122.403355)
+        ];
+      }
+    </script>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVCdV_g0UDel1hHZYuN5qjIGHD6dzZhWE&libraries=visualization&callback=initMap">
+    </script>
+  </body>
+</html>
+
