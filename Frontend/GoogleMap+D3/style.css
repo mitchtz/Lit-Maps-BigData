@@ -1,0 +1,19 @@
+#map {
+ height: 350px;
+ width: 800px;
+   }
+html, body {
+ height: 450px;
+ width: 700px;
+ margin: 0;
+ padding: 0;
+}
+
+.tweets, .tweets svg {
+position: absolute;
+}
+.tweets circle {
+fill: red;
+stroke: yello;
+stroke-width: 4px;
+}
