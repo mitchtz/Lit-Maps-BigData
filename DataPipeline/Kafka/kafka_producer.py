@@ -214,11 +214,11 @@ if __name__ == "__main__":
 
 		top50_songs.append({"track_id":i["track_id"], "track_name":track})
 		#Push dict onto stack
-		#work_queue.put({"track_id":i["track_id"], "track_name":track})
+		work_queue.put({"track_id":i["track_id"], "track_name":track})
 
 	
-	#Fill queue
-	[work_queue.put(i) for i in top50_songs[:5]]
+	#Fill queue with only some songs
+	#[work_queue.put(i) for i in top50_songs[:5]]
 	#List of children processes
 	children = []
 	print("--Spawning", num_threads, "children")
