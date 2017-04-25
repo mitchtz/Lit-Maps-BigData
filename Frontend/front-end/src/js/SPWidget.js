@@ -71,6 +71,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _classCallCheck(this, SPWidget);
 
 	    this.songId = '';
+		this.rank = 1;
 	    this.primaryColor = '';
 	    this.artist = '';
 	    this.title = '';
@@ -163,7 +164,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      var widget = document.querySelector(this.element);
 	      if (widget) {
-	        var htmlString = '<img id="album-image" src=' + this.imageUrl + '></img>\n                        <a href="' + this.externalUrl + '" class="link-to-song"><i class="fa fa-spotify"></i></a>\n                        <div id="info">\n                            <div class="bars">\n                                <div class="bar one"></div>\n                                <div class="bar two"></div>\n                                <div class="bar three"></div>\n                            </div>\n                            <div class="artist">' + this.artist + '</div>\n                            <div class="song-name">' + this.title + '</div>\n                            <div id="play-button" class="paused">\n                                <i class="fa fa-play"></i>\n                            </div>\n                            <div id="timeline">\n                                <div id="playhead"></div>\n                            </div>\n                        </div>';
+	        var htmlString = '<img id="album-image" src=' + this.imageUrl + '></img>\n                        <a href="' + this.externalUrl + '" class="link-to-song"><i class="fa fa-spotify"></i></a>\n                        <div id="info">\n                            <div class="bars">\n                                <div class="bar one"></div>\n                                <div class="bar two"></div>\n                                <div class="bar three"></div>\n                            </div>\n                            <div class="artist">' + this.artist + '</div>\n                            <div class="song-name">' +this.rank+'. '+ this.title + '</div>\n                            <div id="play-button" class="paused">\n                                <i class="fa fa-play"></i>\n                            </div>\n                            <div id="timeline">\n                                <div id="playhead"></div>\n                            </div>\n                        </div>';
 
 	        widget.innerHTML = htmlString;
 

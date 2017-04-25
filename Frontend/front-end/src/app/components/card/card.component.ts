@@ -15,10 +15,6 @@ export class CardComponent implements OnInit, OnDestroy {
     trackId: ""
   };
 
-  clicked(variable) {
-    console.log(variable);
-  }
-
 
   constructor(private songsService: SongsService) { }
 
