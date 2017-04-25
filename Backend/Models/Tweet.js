@@ -7,7 +7,7 @@ const tweetSchema = new mongoose.Schema({
   lat: String,
   long: String,
   sentiment: Number,
-  created_at: Date
+  created_at: Number
 }, { timestamps: true })
 
 module.exports = mongoose.model('Tweet', tweetSchema, 'tweets')
