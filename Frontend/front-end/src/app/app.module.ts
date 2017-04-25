@@ -4,7 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule, Routes } from '@angular/router';
 
+
 import { AppComponent } from './app.component';
+import { AgmCoreModule } from 'angular2-google-maps/core';
 import { NavbarComponent } from './components/navbar/navbar/navbar.component';
 import { AboutComponent } from './components/about/about.component';
 import { CardComponent } from './components/card/card.component';
@@ -17,10 +19,10 @@ import {TweetsService} from './services/tweets.service';
 import { OrderByPipe } from './pipes/order-by.pipe';
 
 const appRoutes: Routes = [
-    {path:'', component: CardComponent},
-    {path:'tech', component: TechComponent},
-    {path:'about', component: AboutComponent},
-    {path:'map', component: MapComponent}
+  { path: '', component: CardComponent },
+  { path: 'tech', component: TechComponent },
+  { path: 'about', component: AboutComponent },
+  { path: 'map', component: MapComponent }
 ];
 
 
@@ -39,6 +41,9 @@ const appRoutes: Routes = [
     BrowserModule,
     FormsModule,
     HttpModule,
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyBVCdV_g0UDel1hHZYuN5qjIGHD6dzZhWE'
+    }),
     RouterModule.forRoot(appRoutes)
   ],
   providers: [SongsService, TweetsService],

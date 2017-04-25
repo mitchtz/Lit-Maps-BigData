@@ -1,4 +1,4 @@
-{
+getMaps({
     "length": 17,
     "tweets": [{
         "track_id": "6SwRhMLwNqEi6alNPVG00n",
@@ -86,4 +86,4 @@
         "tweet_id": 852748613050482700,
         "location": [-116.238001, 43.598033]
     }]
-}
+})
