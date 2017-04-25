@@ -27,8 +27,8 @@ dotenv.load({ path: '.env' })
 /**
  * Controllers (route handlers).
  */
- const songController = require('./controllers/song')
- const tweetController = require('./controllers/tweet')
+ const songController = require('./Controllers/song')
+ const tweetController = require('./Controllers/tweet')
 
  /**
  * Create Express server.

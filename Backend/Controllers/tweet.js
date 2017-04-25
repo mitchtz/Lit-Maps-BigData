@@ -1,6 +1,6 @@
 const dotenv = require('dotenv')
 const request = require('request')
-const Tweet = require('../models/Tweet')
+const Tweet = require('../Models/Tweet')
 
 dotenv.load({ path: '.env' })
 

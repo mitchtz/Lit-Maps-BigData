@@ -1,6 +1,6 @@
 const dotenv = require('dotenv')
 const request = require('request')
-const Song = require('../models/Song')
+const Song = require('../Models/Song')
 
 dotenv.load({ path: '.env' })
 
