@@ -26,16 +26,42 @@ def bytes_to_dict(bytes_in):
 
 #Takes in a tweet, calculates the center of the bounding box given as location
 def location_strip(twt):
-	plc = twt["place"]
-	if "bounding_box" in plc:
-		box = plc["bounding_box"]["coordinates"][0]
-		lat = [i[0] for i in box]
-		lon = [i[1] for i in box]
-		return [sum(lat)/len(lat), sum(lon)/len(lon)]
+	#If using the original tweet format
+	if "place" in twt:
+		plc = twt["place"]
+		if "bounding_box" in plc:
+			box = plc["bounding_box"]["coordinates"][0]
+			lat = [i[0] for i in box]
+			lon = [i[1] for i in box]
+			return [sum(lat)/len(lat), sum(lon)/len(lon)]
+	#If using the activity stream format
+	if "location" in twt:
+		plc = twt["location"]["geo"]
+		if plc["type"] == "Polygon":
+			box = plc["coordinates"][0]
+			lat = [i[0] for i in box]
+			lon = [i[1] for i in box]
+			return [sum(lat)/len(lat), sum(lon)/len(lon)]
 
 #Takes in tweet, analyzes sentiment for the tweet and return sentiment value
 def sentiment_analyze(twt):
 	return 1
+
+#Takes in created_at time from Tweet (should already be in UTC), returns formatted UTC string <yyyymmddhhmm>
+def tweet_to_utc(created_at):
+	utc_out = ""
+	#Split tweet in time at spaces. tweet time in is formatted like this: Wed Mar 22 19:45:22 +0000 2017
+	utc_in = created_at.split(" ")
+	#Last term is year
+	utc_out += utc_in[-1]
+	#Convert month to number using dict
+	months = {"Jan":"01", "Feb":"02", "Mar":"03", "Apr":"04", "May":"05", "Jun":"06", "Jul":"07", "Aug":"08", "Sep":"09", "Oct":"10", "Nov":"11", "Dec":"12"}
+	utc_out += months[utc_in[1]]
+	utc_out += utc_in[2]
+	#Now get time, strip seconds and store hour and minute
+	utc_out += (utc_in[3].split(":")[0] + utc_in[3].split(":")[1])
+	return utc_out
+
 
 
 #Worker that consumes tweets from kafka. Is passed the partition number to subscribe to.
@@ -52,26 +78,29 @@ def worker(kafka_settings, mongo_settings, partition):
 	#Connect to the collection you want
 	collection = db[mongo_settings["collection"]] #Dictionary style access works here too: collection = db['test-collection']
 	first = True
+	#print("Connected to Mongo")
 	#Iterate through messages
 	for msg in consumer:
 		#print("%s:%d:%d: key=%s value=%s") % (msg.topic, msg.partition, msg.offset, msg.key, str(bytes_to_dict(msg.value)))
 		#print("Value:", bytes_to_dict(msg.value))
 		#Convert the kafka message back into a dict
 		tweet_in = bytes_to_dict(msg.value)
+		
 		#Check if there is a place field
-		if "place" in tweet_in:
+		if ("place" in tweet_in) or ("location" in tweet_in):
 			#Dict that will be pushed into Mongo
 			tweet_out = {}
 			#Start processing the tweet
 			#Keep pertinent informatino that doesn't need processing
 			tweet_out["track_id"] = tweet_in["track_id"]
 			tweet_out["tweet_id"] = tweet_in["tweet_id"]
-			
 			tweet_out["created_at"] = tweet_in["created_at"]
+			#tweet_out["created_at_int"] = int(tweet_to_utc(tweet_in["created_at"])) #tweet_in["created_at"]
 			#Take in the coordinate box and average it to a single set of coordinates
+			
 			tweet_out["location"] = location_strip(tweet_in)
 			#Analyze sentiment
-			tweet_out["sentiment"] = sentiment_analyze(tweet_in)
+			#tweet_out["sentiment"] = sentiment_analyze(tweet_in)
 			
 
 			#Insert/Update the tweet into Mongo
@@ -101,8 +130,8 @@ if __name__ == "__main__":
 
 	#Kafka setting information
 	kafka_settings = {
-	"topic":"3parttest",
-	"partitions":3
+	"topic":"tweetqueue",
+	"partitions":5
 	}
 	num_threads = kafka_settings["partitions"]
 	children = []

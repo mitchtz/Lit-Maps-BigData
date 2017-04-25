@@ -11,24 +11,24 @@ def dict_to_bytes(dict_in):
 	return bytes(json.dumps(dict_in), "utf-8")
 
 #Takes in a reseponse from GNIP and returns a list of tweets with only necessary information
-def response_parer_weird(res, song_info):
+def response_parer_activity(res, song_info):
 	tweet_list = []
 	for i in res.json()["results"]:
 		temp_dict = {}
 		temp_dict["body"] = i["body"]
 		#temp_dict["gnip"] = i["gnip"]
 		#temp_dict["actor"] = i["actor"]
-		temp_dict["postedTime"] = i["postedTime"]
+		temp_dict["created_at"] = i["postedTime"]
 		temp_dict["location"] = i["location"]
 		temp_dict["tweet_id"] = i["id"].split(":")[2]
-		temp_dict["prefUsername"] = i["actor"]["preferredUsername"]
+		#temp_dict["prefUsername"] = i["actor"]["preferredUsername"]
 		temp_dict["track_id"] = song_info["track_id"]
 		tweet_list.append(temp_dict)
 	return tweet_list
 
 #Takes in a response from GNIP and returns a list of tweets with basic information persisted
 #This is for the old api
-def response_parer(res, song_info):
+def response_parer_original(res, song_info):
 
 	tweet_list = []
 	for i in res.json()["results"]:
@@ -43,13 +43,13 @@ def response_parer(res, song_info):
 			temp_list["tweet_id"] = i["id"]
 			temp_list["text"] = i["text"]
 			temp_list["geo"] = i["geo"]
-			temp_list["lang"] = i["lang"]
+			#temp_list["lang"] = i["lang"]
 			temp_list["created_at"] = i["created_at"]
-			temp_list["retweet_count"] = i["retweet_count"]
-			temp_list["retweeted"] = i["retweeted"]
+			#temp_list["retweet_count"] = i["retweet_count"]
+			#temp_list["retweeted"] = i["retweeted"]
 			#temp_list["quote_count"] = i["quote_count"]
 			#temp_list["favorited"] = i["favorited"]
-			temp_list["reply_count"] = i["reply_count"]
+			#temp_list["reply_count"] = i["reply_count"]
 			temp_list["track_id"] = song_info["track_id"]
 
 			tweet_list.append(temp_list)
@@ -85,7 +85,8 @@ def get_top50(mongo_settings):
 		#Query for the latest tweet stored about this song
 		i["latest"] = db.collection.find({"track_id":i["track_id"]})#.sort({"_id": -1}).limit(1)
 		songs.append(i)
-		
+	#Now loop through songs and check for their most recent tweet
+
 	return songs
 	''''
 	for i in results:
@@ -97,10 +98,10 @@ def get_top50(mongo_settings):
 		print("------------------------")
 	'''
 
-#Function to retrieve tweets based on song info. pushes data to Kafka. Returns the timestamp of the latest tweet retrieved
+#Function to retrieve tweets based on song info. Returns a list of responses
 def get_tweets(song_info, gnip_settings):
 	print("Searching:", song_info["track_name"])
-	search_params = {'query':'' + song_info["track_name"] + ' has:geo place_country:us lang:en', 'maxResults':'500'}#, "fromDate":"201703100000"}# 'maxResults':'500',
+	search_params = {'query':'' + song_info["track_name"] + ' has:geo place_country:us lang:en', 'maxResults':'500'}#, "fromDate":"201703240000"}# 'maxResults':'500', <yyyymmddhhmm> UTC
 	#num_responses = 0
 	resp_list = []
 	#temp = []
@@ -111,9 +112,14 @@ def get_tweets(song_info, gnip_settings):
 		response = requests.get(gnip_settings["url"], params=search_params, auth=(gnip_settings["user"], gnip_settings["pass"]))
 		#Parse response and then add the dicts to the list of results
 		if "results" in response.json():
-			resp_list.extend(response_parer(response, song_info))
+			pared = response_parer_activity(response, song_info)
+			#If results are in other format, try paring using other format
+			if len(pared) < 1:
+				pared = response_parer_original(response, song_info)
 
-			##resp_list.extend(response_parer(response, song_info))
+			resp_list.extend(pared)
+
+			##resp_list.extend(response_parer_original(response, song_info))
 			##num_responses += 1
 		#Check if we received a next token, if so, add to the search_params. Otherwise end the loop
 		if "next" in response.json():
@@ -135,19 +141,8 @@ def get_tweets(song_info, gnip_settings):
 #Function that takes in a list of tweets and puts them into Kafka
 def kafka_push(kafka_settings, tweets):
 	producer = KafkaProducer()#key_serializer=lambda v: bytes(v), bootstrap_servers='localhost:9092'
-	#Create connection to Mongo
-	client = MongoClient(mongo_settings["ip"], mongo_settings["port"]) #client = MongoClient('mongodb://localhost:27017/') also works
-	#Connect to a database
-	db = client[mongo_settings["db"]] #Can use db = client["test-db"] to select dbs that don't use attribute style access
-	#Connect to the collection you want
-	##collection = db["1parttest"]
+	#Iterate through tweets and push to kafka
 	for i in tweets:
-		'''
-		tweet_b = dict_to_bytes(i)
-		tweet = dict(json.loads(tweet_b.decode("utf-8")))
-		post_id = collection.update({"id":tweet["id"]}, tweet, True)
-		'''
-		
 		#Convert all chars of track_id into numbers, sum them and use this number and % with the number of partitions to determine what partiton to send to
 		part_hash = sum([ord(ch) for ch in str(i["tweet_id"])])%kafka_settings["partitions"]
 		#part_hash = i["id"]%kafka_settings["partitions"]
@@ -175,18 +170,19 @@ def worker(work_queue, kafka_settings, gnip_settings):
 
 if __name__ == "__main__":
 	#Number of threads to spawn
-	num_threads = 2
+	num_threads = 1
 	#Kafka setting information
 	kafka_settings = {
-	"topic":"3parttest",
-	"partitions":3
+	"topic":"tweetqueue",
+	"partitions":5
 	}
 	#Mongo setting information
 	mongo_settings = {
 	"ip":"localhost",
 	"port":27017,
 	"db":"litmaps",
-	"collection":"top50"
+	"collection":"top50",
+	"tweet_collection":"tweets"
 	}
 	#GNIP setting information.PULL FROM FILE
 	gnip_settings = {}
@@ -206,22 +202,19 @@ if __name__ == "__main__":
 	#Get list of songs and info about their last updates from mongo
 	songs = get_top50(mongo_settings)
 	top50_songs = []
+	#Split song titles down to just song name. Exclude anything after "feat." or "(". Push dict with song info onto the queue.
 	for i in songs:
-		'''
-		print(i)
-		print(i["track_id"])
-		#Split off features and long song titles (eg song (feat. artist) becomes song)
-		print(i["track_name"].split("(")[0])
-		print(i["track_artist"])
-		print(i["rank"])
-		#print(i["latest"])
-		print("------------------------")
-		'''
+		#Split if there is a "(". Take everything before "("
 		track = i["track_name"].split("(")[0]
+		#Split if there is a "feat." in the title. lowercase the title and then split, keep title lowercase (GNIP search doesn't care about capitalization)
+		track = track.lower().split("feat.")[0]
+		#Remove trailing space if there is one
 		if track[-1] == " ":
 			track = track[:-1]
 
 		top50_songs.append({"track_id":i["track_id"], "track_name":track})
+		#Push dict onto stack
+		#work_queue.put({"track_id":i["track_id"], "track_name":track})
 
 	
 	#Fill queue
