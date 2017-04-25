@@ -63,10 +63,9 @@ server.use(cors())
 /**
  * Primary server routes.
  */
- server.get('/songs', songController.getAllSongs)
- server.get('/songs/:songID', songController.getSong)
- server.get('/tweets/:songID', tweetController.getTweets)
- server.get('/tweets/:songID/:hours', tweetController.getTweetsDate)
+server.get('/songs', songController.getAllSongs)
+server.get('/songs/:songID', songController.getSong)
+server.get('/tweets/:songID', tweetController.getTweets)
 
 
 /**
