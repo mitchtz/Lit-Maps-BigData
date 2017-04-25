@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { SongsService } from '../../services/songs.service';
 import { TrackId } from '../../services/trackId';
 import { SongRank } from '../../services/songRank';
+import { SongTitle} from '../../services/songTitle';
 
 
 @Component({
@@ -17,8 +18,10 @@ export class CardComponent implements OnInit, OnDestroy {
   };
   songRank: SongRank = {
     songRank: null
-  }
-
+  };
+  songTitle: SongTitle = {
+    songTitle: ""
+  };
 
   constructor(private songsService: SongsService) { }
 
@@ -35,6 +38,7 @@ export class CardComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.songsService.trackId = this.trackId;
     this.songsService.songRank = this.songRank;
+    this.songsService.songTitle = this.songTitle;
   }
 
 }

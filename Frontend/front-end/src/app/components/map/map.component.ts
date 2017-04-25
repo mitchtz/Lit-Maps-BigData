@@ -3,6 +3,7 @@ import { SongsService } from '../../services/songs.service';
 import { TweetsService } from '../../services/tweets.service';
 import { TrackId } from '../../services/trackId';
 import { SongRank } from '../../services/songRank';
+import { SongTitle } from '../../services/songTitle';
 
 declare var SPWidget: any;
 var widget;
@@ -308,6 +309,9 @@ export class MapComponent implements OnInit {
   lat: number = 39.8282;
   lng: number = -98.5795;
 
+  //counter
+  counter: number = 0;
+
   //Markers
   markers: marker[] = [
 
@@ -316,6 +320,7 @@ export class MapComponent implements OnInit {
   tweets: any = [];
   trackId: TrackId;
   songRank: SongRank;
+  songTitle: SongTitle;
   constructor(private songsService: SongsService,
     private tweetsService: TweetsService,
     private elementRef: ElementRef) { }
@@ -324,6 +329,7 @@ export class MapComponent implements OnInit {
     //Grab rank and track id
     this.trackId = this.songsService.trackId;
     this.songRank = this.songsService.songRank;
+    this.songTitle = this.songsService.songTitle;
 
     //grab tweets based on trackId
     this.tweetsService.getTweets(this.trackId).subscribe(tweets => {
@@ -331,6 +337,8 @@ export class MapComponent implements OnInit {
       //this is where we populate map for d3.
       if (this.tweets.length > 0) {
         for (var i = 0; i < this.tweets.length; i++) {
+          this.counter++;
+          console.log(this.counter);
           var coords = this.tweets.tweets[i].location;
           var coordsObject = {
             lat: coords[1],
@@ -341,6 +349,7 @@ export class MapComponent implements OnInit {
       } else {
         // we'll get creative here
         console.log('Shit\'s trash bruh');
+        console.log(this.counter);
       }
     });
 

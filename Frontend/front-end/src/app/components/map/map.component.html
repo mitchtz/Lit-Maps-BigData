@@ -1,21 +1,15 @@
 <div class="row">
-  <div class="col-xs-12 pull-center">
-      <!-- Using angular2-google-maps to display tweet location -->
-    <sebm-google-map
-        [latitude]="lat"
-        [longitude]="lng"
-        [zoom]="zoom"
-        [styles]="styles"
-        [disableDefaultUI]=true
-        [zoomControl]=false
-        (mapClick)="mapClicked($event)">
+  <div class="col-xs-12 text-center">
+    <h3><b>{{songRank}}. {{songTitle}}</b></h3>
+  </div>
+</div>
 
-      <sebm-google-map-marker
-      *ngFor="let m of markers; let i = index"
-      (markerClick)="clickedMarker(m, index)"
-      [latitude]="m.lat"
-      [longitude]="m.lng"
-      [markerDraggable]=false >
+<div class="row">
+  <div class="col-xs-12 pull-center">
+    <!-- Using angular2-google-maps to display tweet location -->
+    <sebm-google-map [latitude]="lat" [longitude]="lng" [zoom]="zoom" [styles]="styles" [disableDefaultUI]=true [zoomControl]=false (mapClick)="mapClicked($event)">
+
+      <sebm-google-map-marker *ngFor="let m of markers; let i = index" (markerClick)="clickedMarker(m, index)" [latitude]="m.lat" [iconUrl]="'../../../images/fire.png'" [longitude]="m.lng" [markerDraggable]=false>
       </sebm-google-map-marker>
     </sebm-google-map>
     <!-- Using angular2-google-maps to display tweet location -->
@@ -23,7 +17,27 @@
 </div>
 
 <div class="row">
+  <div class="col-sm-12 text-center">
+    <h3><b>{{counter}} TWEETS</b></h3>
+  </div>
+</div>
+
+<div class="row">
   <div class="col-sm-3 pull-left">
     <div id="myWidget" class="SPWidget"></div>
+  </div>
+  <div class="col-sm-3 pull-right">
+
+     <!--<div class="results">
+          <div *ngIf="counter < 100">
+              <img src="../../../images/cryingjordan.jpg" alt="">
+          </div>
+          <div *ngIf="counter > 100 < 2000">
+              <iframe src="//giphy.com/embed/YA6dmVW0gfIw8" width="360" height="180" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
+          </div>
+          <div *ngIf="counter > 2000">
+              <iframe src="//giphy.com/embed/l46CfciRSJKVpUvAs" width="360" height="180" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
+          </div>
+      </div>-->
   </div>
 </div>

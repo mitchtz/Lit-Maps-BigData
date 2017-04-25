@@ -3,12 +3,14 @@ import { Http, Headers  } from '@angular/http';
 import 'rxjs/add/operator/map';
 import { TrackId } from './trackId';
 import { SongRank } from './songRank';
+import { SongTitle } from './songTitle';
 
 @Injectable()
 export class SongsService {
 
   public trackId: TrackId;
   public songRank: SongRank;
+  public songTitle: SongTitle;
   constructor(private http: Http) { }
 
   //Get all songs from the API

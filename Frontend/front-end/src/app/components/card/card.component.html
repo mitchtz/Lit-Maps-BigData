@@ -3,7 +3,7 @@
     <div class="center clearfix" *ngIf="i % 4 == 0"></div>
     <div class="col-sm-3 card">
       <div class="card-header" role="tab">
-        <img src="{{song.album_cover[0].url}}" (click)="trackId=song.track_id; songRank=song.rank" [routerLink]="['/map']">
+        <img src="{{song.album_cover[0].url}}" (click)="trackId=song.track_id; songRank=song.rank; songTitle=song.track_name;" [routerLink]="['/map']">
         <h4><b>{{song.rank}}. {{song.track_name}}</b></h4>
         <p>{{song.track_artist}}</p>
         <p>{{song.track_album}}</p>
