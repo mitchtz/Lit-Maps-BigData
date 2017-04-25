@@ -1,8 +1,24 @@
 <div class="row">
-  <div class="col-xs-12 text-center">
-    <sebm-google-map [latitude]="lat" [longitude]="lng">
-      <sebm-google-map-marker [latitude]="lat" [longitude]="lng"></sebm-google-map-marker>
+  <div class="col-xs-12 pull-center">
+      <!-- Using angular2-google-maps to display tweet location -->
+    <sebm-google-map
+        [latitude]="lat"
+        [longitude]="lng"
+        [zoom]="zoom"
+        [styles]="styles"
+        [disableDefaultUI]=true
+        [zoomControl]=false
+        (mapClick)="mapClicked($event)">
+
+      <sebm-google-map-marker
+      *ngFor="let m of markers; let i = index"
+      (markerClick)="clickedMarker(m, index)"
+      [latitude]="m.lat"
+      [longitude]="m.lng"
+      [markerDraggable]=false >
+      </sebm-google-map-marker>
     </sebm-google-map>
+    <!-- Using angular2-google-maps to display tweet location -->
   </div>
 </div>
 
