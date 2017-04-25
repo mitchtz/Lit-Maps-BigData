@@ -13,7 +13,6 @@ import { TechComponent } from './components/tech/tech.component';
 import { JumbotronComponent } from './components/jumbotron/jumbotron.component';
 
 import {SongsService} from './services/songs.service';
-import {TweetsService} from './services/tweets.service';
 import { OrderByPipe } from './pipes/order-by.pipe';
 
 const appRoutes: Routes = [
