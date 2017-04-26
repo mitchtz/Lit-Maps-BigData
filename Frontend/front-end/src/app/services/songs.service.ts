@@ -17,7 +17,7 @@ export class SongsService {
   getAllSongs() {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    return this.http.get('http://ec2-35-167-19-138.us-west-2.compute.amazonaws:8080/songs', { headers: headers })
+    return this.http.get('http://ec2-35-167-19-138.us-west-2.compute.amazonaws.com:8080/songs', { headers: headers })
       .map(res => res.json());
   }
 
