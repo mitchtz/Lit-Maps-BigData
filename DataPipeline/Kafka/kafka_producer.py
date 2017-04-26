@@ -122,7 +122,8 @@ def get_tweets(song_info, gnip_settings):
 			##resp_list.extend(response_parer_original(response, song_info))
 			##num_responses += 1
 		#Check if we received a next token, if so, add to the search_params. Otherwise end the loop
-		if "next" in response.json():
+		#Also limit to 200000 responses, as top songs are still under 50,000, so this is a safe overestimate for now
+		if ("next" in response.json()) and (len(resp_list) < 200000):
 			search_params["next"] = response.json()["next"]
 		else:
 			#temp = response.json()["results"][0]
@@ -173,7 +174,7 @@ if __name__ == "__main__":
 	num_threads = 1
 	#Kafka setting information
 	kafka_settings = {
-	"topic":"tweetqueue",
+	"topic":"tweets",
 	"partitions":5
 	}
 	#Mongo setting information
@@ -199,7 +200,7 @@ if __name__ == "__main__":
 	print("Retrieving song info and filling queue")
 	start = time.time()
 
-	#Get list of songs and info about their last updates from mongo
+	#Get list of songs and info about their last updates from mongo 
 	songs = get_top50(mongo_settings)
 	top50_songs = []
 	#Split song titles down to just song name. Exclude anything after "feat." or "(". Push dict with song info onto the queue.
