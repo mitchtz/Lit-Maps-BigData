@@ -46,7 +46,7 @@ const appRoutes: Routes = [
     }),
     RouterModule.forRoot(appRoutes)
   ],
-  providers: [SongsService, TweetsService,],
+  providers: [SongsService, TweetsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
