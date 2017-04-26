@@ -29,13 +29,13 @@
   <div class="col-sm-3 pull-right">
 
      <div class="results">
-          <div *ngIf="counter < 1010">
+          <div *ngIf="counter <= 1000">
               <img src="../../../images/cryingjordan.jpg" alt="">
           </div>
-          <div *ngIf="counter > 1010">
+          <div *ngIf="counter > 1000 && counter < 5000">
               <iframe src="//giphy.com/embed/YA6dmVW0gfIw8" width="360" height="180" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
           </div>
-          <div *ngIf="counter > 5000">
+          <div *ngIf="counter >= 5000">
               <iframe src="//giphy.com/embed/l46CfciRSJKVpUvAs" width="360" height="180" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
           </div>
       </div>
