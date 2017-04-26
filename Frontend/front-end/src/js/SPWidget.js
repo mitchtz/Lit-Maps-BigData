@@ -110,7 +110,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (this.playButton) {
 	        //set new class of icon
 	        this.playButton.children[0].setAttribute("class", "fa fa-pause");
-	        console.log(document.querySelector(this.element).querySelector('.bars'));
+	        //console.log(document.querySelector(this.element).querySelector('.bars'));
 	        document.querySelector(this.element).querySelector('.bars').setAttribute("class", "bars playing");
 	      }
 	    }
@@ -153,7 +153,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          return _this.updateTime();
 	        };
 
-	        console.log(_this);
+	        //console.log(_this);
 	        _this.displayPlayer();
 	      });
 	    }
@@ -178,7 +178,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          return _this2.togglePlay();
 	        };
 	      } else {
-	        console.log('No div with id SPWidget was found. Add #SPWidget, or pass in an element query selector as a prop.');
+	        //console.log('No div with id SPWidget was found. Add #SPWidget, or pass in an element query selector as a prop.');
 	      }
 	    }
 	  }]);

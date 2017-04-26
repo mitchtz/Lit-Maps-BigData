@@ -1,5 +1,5 @@
 var map;
-console.log('maps bruh')
+//console.log('maps bruh')
 function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
     zoom: 4,

@@ -717,7 +717,7 @@ var MapComponent = (function () {
         //grab tweets based on trackId
         this.tweetsService.getCount(this.trackId).subscribe(function (tweetCount) {
             _this.counter = tweetCount.count;
-            console.log(_this.counter);
+            //console.log(this.counter);
         });
         //grab tweets based on trackId
         this.tweetsService.getTweets(this.trackId).subscribe(function (tweets) {
@@ -734,7 +734,6 @@ var MapComponent = (function () {
                 }
             }
             else {
-                console.log('Shit\'s trash bruh');
             }
         });
         // Render widget based on track id
@@ -990,7 +989,7 @@ module.exports = "<div id=\"navbar-green\">\n  <nav class=\"navbar navbar-ct-gre
 /***/ 704:
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"row\">\n  <div class=\"col-md-4\">\n    <div class=\"thumbnail\">\n      <img src=\"../../../images/angular.svg\" alt=\"\">\n      <div class=\"caption\">\n        <h3>Angular2</h3>\n        <p>...</p>\n      </div>\n    </div>\n  </div>\n  <div class=\"col-md-4\">\n    <div class=\"thumbnail\">\n      <img src=\"../../../images/kafka.jpg\" alt=\"\">\n      <div class=\"caption\">\n        <h3>Apache Kafka</h3>\n        <p>...</p>\n      </div>\n    </div>\n  </div>\n  <div class=\"col-md-4\">\n    <div class=\"thumbnail\">\n      <img src=\"../../../images/mongodb.png\" alt=\"\">\n      <div class=\"caption\">\n        <h3>Mongodb</h3>\n        <p>...</p>\n      </div>\n    </div>\n  </div>\n</div>\n<div class=\"row\">\n  <div class=\"col-md-4\">\n    <div class=\"thumbnail\">\n      <img src=\"../../../images/GNIP.png\" alt=\"\">\n      <div class=\"caption\">\n        <h3>GNIP</h3>\n        <p>...</p>\n      </div>\n    </div>\n  </div>\n  <div class=\"col-md-4\">\n    <div class=\"thumbnail\">\n      <img src=\"../../../images/aws.png\" alt=\"\">\n      <div class=\"caption\">\n        <h3>Amazon Web Services</h3>\n        <p>...</p>\n      </div>\n    </div>\n  </div>\n  <div class=\"col-md-4\">\n    <div class=\"thumbnail\">\n      <img src=\"../../../images/node.png\" alt=\"\">\n      <div class=\"caption\">\n        <h3>Nodejs</h3>\n        <p>...</p>\n      </div>\n    </div>\n  </div>\n</div>\n"
+module.exports = "<div class=\"row\">\n  <div class=\"col-md-4\">\n    <div class=\"thumbnail\">\n      <img src=\"../../../images/angular.svg\" alt=\"\">\n      <div class=\"caption\">\n        <h3>Angular2</h3>\n        <p>Angular2 was used for the front-end.</p>\n      </div>\n    </div>\n  </div>\n  <div class=\"col-md-4\">\n    <div class=\"thumbnail\">\n      <img src=\"../../../images/kafka.jpg\" alt=\"\">\n      <div class=\"caption\">\n        <h3>Apache Kafka</h3>\n        <p>Kafka was used for the data pipline.</p>\n      </div>\n    </div>\n  </div>\n  <div class=\"col-md-4\">\n    <div class=\"thumbnail\">\n      <img src=\"../../../images/mongodb.png\" alt=\"\">\n      <div class=\"caption\">\n        <h3>Mongodb</h3>\n        <p>Mongodb was used for the database</p>\n      </div>\n    </div>\n  </div>\n</div>\n<div class=\"row\">\n  <div class=\"col-md-4\">\n    <div class=\"thumbnail\">\n      <img src=\"../../../images/GNIP.png\" alt=\"\">\n      <div class=\"caption\">\n        <h3>GNIP</h3>\n        <p>GNIP was used for the Twitter firehose.</p>\n      </div>\n    </div>\n  </div>\n  <div class=\"col-md-4\">\n    <div class=\"thumbnail\">\n      <img src=\"../../../images/aws.png\" alt=\"\">\n      <div class=\"caption\">\n        <h3>Amazon Web Services</h3>\n        <p>AWS was used for the dev ops.</p>\n      </div>\n    </div>\n  </div>\n  <div class=\"col-md-4\">\n    <div class=\"thumbnail\">\n      <img src=\"../../../images/node.png\" alt=\"\">\n      <div class=\"caption\">\n        <h3>Nodejs</h3>\n        <p>Node was used for the server.</p>\n      </div>\n    </div>\n  </div>\n</div>\n"
 
 /***/ }),
 
