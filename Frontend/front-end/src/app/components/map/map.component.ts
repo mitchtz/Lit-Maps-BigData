@@ -334,13 +334,17 @@ export class MapComponent implements OnInit {
     this.songTitle = this.songsService.songTitle;
 
     //grab tweets based on trackId
+    this.tweetsService.getCount(this.trackId).subscribe(tweetCount => {
+      this.counter =tweetCount.length;
+      console.log(this.counter);
+    });
+
+    //grab tweets based on trackId
     this.tweetsService.getTweets(this.trackId).subscribe(tweets => {
       this.tweets = tweets;
       //this is where we populate map for d3.
       if (this.tweets.length > 0) {
         for (var i = 0; i < this.tweets.length; i++) {
-          this.counter++;
-          console.log(this.counter);
           var coords = this.tweets.tweets[i].location;
           var coordsObject = {
             lat: coords[1],
@@ -349,11 +353,8 @@ export class MapComponent implements OnInit {
           this.markers.push(coordsObject);
         }
       } else {
-        // we'll get creative here
         console.log('Shit\'s trash bruh');
-        console.log(this.counter);
       }
-      this.finalCounter = this.counter;
     });
 
     // Render widget based on track id

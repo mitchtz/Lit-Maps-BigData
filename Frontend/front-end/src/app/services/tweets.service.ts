@@ -8,9 +8,16 @@ export class TweetsService {
   constructor(private http: Http) { }
 
   getTweets(track_Id) {
-      let headers = new Headers();
-      headers.append('Content-Type', 'application/json');
-      return this.http.get('http://localhost:8080/tweets/'+ track_Id, { headers: headers })
-        .map(res => res.json());
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    return this.http.get('http://localhost:8080/tweets/' + track_Id, { headers: headers })
+      .map(res => res.json());
+  }
+
+  getCount(track_Id) {
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    return this.http.get('http://localhost:8080/tweets/' + track_Id, { headers: headers })
+      .map(res => res.json());
   }
 }
