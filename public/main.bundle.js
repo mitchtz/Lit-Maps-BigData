@@ -29,7 +29,7 @@ var SongsService = (function () {
     SongsService.prototype.getAllSongs = function () {
         var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Headers */]();
         headers.append('Content-Type', 'application/json');
-        return this.http.get('http://localhost:8080/songs', { headers: headers })
+        return this.http.get('http://ec2-35-167-19-138.us-west-2.compute.amazonaws.com/8080/songs', { headers: headers })
             .map(function (res) { return res.json(); });
     };
     SongsService = __decorate([
@@ -71,13 +71,13 @@ var TweetsService = (function () {
     TweetsService.prototype.getTweets = function (track_Id) {
         var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Headers */]();
         headers.append('Content-Type', 'application/json');
-        return this.http.get('http://localhost:8080/tweets/' + track_Id, { headers: headers })
+        return this.http.get('http://ec2-35-167-19-138.us-west-2.compute.amazonaws.com/tweets/' + track_Id, { headers: headers })
             .map(function (res) { return res.json(); });
     };
     TweetsService.prototype.getCount = function (track_Id) {
         var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Headers */]();
         headers.append('Content-Type', 'application/json');
-        return this.http.get('http://localhost:8080/tweets/' + track_Id + '/count', { headers: headers })
+        return this.http.get('http://ec2-35-167-19-138.us-west-2.compute.amazonaws.com/tweets/' + track_Id + '/count', { headers: headers })
             .map(function (res) { return res.json(); });
     };
     TweetsService = __decorate([
