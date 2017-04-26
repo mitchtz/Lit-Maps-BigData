@@ -67,6 +67,15 @@ server.get('/songs', songController.getAllSongs)
 server.get('/songs/:songID', songController.getSong)
 server.get('/tweets/:songID', tweetController.getTweets)
 
+var app = express();
+app.use('/',express.static(__dirname + '/public'));
+
+
+app.listen(3000);
+// app.get('/',function(req, res){
+//     res.sendFile(__dirname + '/public/index.html');
+// });
+
 
 /**
  * Error Handler.
