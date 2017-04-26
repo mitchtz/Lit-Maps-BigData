@@ -312,6 +312,8 @@ export class MapComponent implements OnInit {
   //counter
   counter: number = 0;
 
+  finalCounter: any;
+
   //Markers
   markers: marker[] = [
 
@@ -351,6 +353,7 @@ export class MapComponent implements OnInit {
         console.log('Shit\'s trash bruh');
         console.log(this.counter);
       }
+      this.finalCounter = this.counter;
     });
 
     // Render widget based on track id
