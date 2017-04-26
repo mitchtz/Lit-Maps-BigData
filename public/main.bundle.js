@@ -77,7 +77,7 @@ var TweetsService = (function () {
     TweetsService.prototype.getCount = function (track_Id) {
         var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Headers */]();
         headers.append('Content-Type', 'application/json');
-        return this.http.get('http://localhost:8080/tweets/' + track_Id, { headers: headers })
+        return this.http.get('http://localhost:8080/tweets/' + track_Id + '/count', { headers: headers })
             .map(function (res) { return res.json(); });
     };
     TweetsService = __decorate([
@@ -716,7 +716,7 @@ var MapComponent = (function () {
         this.songTitle = this.songsService.songTitle;
         //grab tweets based on trackId
         this.tweetsService.getCount(this.trackId).subscribe(function (tweetCount) {
-            _this.counter = tweetCount.length;
+            _this.counter = tweetCount.count;
             console.log(_this.counter);
         });
         //grab tweets based on trackId
@@ -976,7 +976,7 @@ module.exports = "<div class=\"jumbotron\">\n \n</div>\n"
 /***/ 702:
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"row\">\n  <div class=\"col-xs-12 text-center\">\n    <h3><b>{{songRank}}. {{songTitle}}</b></h3>\n  </div>\n</div>\n\n<div class=\"row\">\n  <div class=\"col-xs-12 pull-center\">\n    <!-- Using angular2-google-maps to display tweet location -->\n    <sebm-google-map [latitude]=\"lat\" [longitude]=\"lng\" [zoom]=\"zoom\" [styles]=\"styles\" [disableDefaultUI]=true [zoomControl]=false (mapClick)=\"mapClicked($event)\">\n\n      <sebm-google-map-marker *ngFor=\"let m of markers; let i = index\" (markerClick)=\"clickedMarker(m, index)\" [latitude]=\"m.lat\" [iconUrl]=\"'../../../images/fire.png'\" [longitude]=\"m.lng\" [markerDraggable]=false>\n      </sebm-google-map-marker>\n    </sebm-google-map>\n    <!-- Using angular2-google-maps to display tweet location -->\n  </div>\n</div>\n\n<div class=\"row\">\n  <div class=\"col-sm-12 text-center\">\n    <h3><b>{{counter}} TWEETS</b></h3>\n  </div>\n</div>\n\n<div class=\"row\">\n  <div class=\"col-sm-3 pull-left\">\n    <div id=\"myWidget\" class=\"SPWidget\"></div>\n  </div>\n  <div class=\"col-sm-3 pull-right\">\n\n     <div class=\"results\">\n          <div *ngIf=\"counter < 1000\">\n              <img src=\"../../../images/cryingjordan.jpg\" alt=\"\">\n          </div>\n          <div *ngIf=\"counter > 2000\">\n              <iframe src=\"//giphy.com/embed/YA6dmVW0gfIw8\" width=\"360\" height=\"180\" frameBorder=\"0\" class=\"giphy-embed\" allowFullScreen></iframe>\n          </div>\n          <div *ngIf=\"counter > 5000\">\n              <iframe src=\"//giphy.com/embed/l46CfciRSJKVpUvAs\" width=\"360\" height=\"180\" frameBorder=\"0\" class=\"giphy-embed\" allowFullScreen></iframe>\n          </div>\n      </div>\n  </div>\n</div>\n"
+module.exports = "<div class=\"row\">\n  <div class=\"col-xs-12 text-center\">\n    <h3><b>{{songRank}}. {{songTitle}}</b></h3>\n  </div>\n</div>\n\n<div class=\"row\">\n  <div class=\"col-xs-12 pull-center\">\n    <!-- Using angular2-google-maps to display tweet location -->\n    <sebm-google-map [latitude]=\"lat\" [longitude]=\"lng\" [zoom]=\"zoom\" [styles]=\"styles\" [disableDefaultUI]=true [zoomControl]=false (mapClick)=\"mapClicked($event)\">\n\n      <sebm-google-map-marker *ngFor=\"let m of markers; let i = index\" (markerClick)=\"clickedMarker(m, index)\" [latitude]=\"m.lat\" [iconUrl]=\"'../../../images/fire.png'\" [longitude]=\"m.lng\" [markerDraggable]=false>\n      </sebm-google-map-marker>\n    </sebm-google-map>\n    <!-- Using angular2-google-maps to display tweet location -->\n  </div>\n</div>\n\n<div class=\"row\">\n  <div class=\"col-sm-12 text-center\">\n    <h3><b>{{counter}} TWEETS</b></h3>\n  </div>\n</div>\n\n<div class=\"row\">\n  <div class=\"col-sm-3 pull-left\">\n    <div id=\"myWidget\" class=\"SPWidget\"></div>\n  </div>\n  <div class=\"col-sm-3 pull-right\">\n\n     <div class=\"results\">\n          <div *ngIf=\"counter < 1000\">\n              <img src=\"../../../images/cryingjordan.jpg\" alt=\"\">\n          </div>\n          <div *ngIf=\"counter > 1000\">\n              <iframe src=\"//giphy.com/embed/YA6dmVW0gfIw8\" width=\"360\" height=\"180\" frameBorder=\"0\" class=\"giphy-embed\" allowFullScreen></iframe>\n          </div>\n          <div *ngIf=\"counter > 5000\">\n              <iframe src=\"//giphy.com/embed/l46CfciRSJKVpUvAs\" width=\"360\" height=\"180\" frameBorder=\"0\" class=\"giphy-embed\" allowFullScreen></iframe>\n          </div>\n      </div>\n  </div>\n</div>\n"
 
 /***/ }),
 

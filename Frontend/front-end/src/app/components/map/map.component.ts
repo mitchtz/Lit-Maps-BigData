@@ -335,7 +335,7 @@ export class MapComponent implements OnInit {
 
     //grab tweets based on trackId
     this.tweetsService.getCount(this.trackId).subscribe(tweetCount => {
-      this.counter =tweetCount.length;
+      this.counter = tweetCount.count;
       console.log(this.counter);
     });
 
