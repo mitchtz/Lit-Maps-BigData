@@ -906,7 +906,7 @@ module.exports = ""
 /***/ 692:
 /***/ (function(module, exports) {
 
-module.exports = "img {\n  width: 100%;\n  height: 100%;\n}\n.row{\n    color: #fff!important;\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex; /* equal height of the children */\n}\n.backgroundcolor {\n  background-color:black;\n}\nh3{\n    font-family: \"Roboto\", Helvetica;\n}\np{\n    font-family: \"Roboto\", Helvetica;\n}\n\n#one-true { overflow: hidden; }\n#one-true .col {\n  width: 27%;\n  padding: 30px 3.15% 0;\n  float: left;\n  margin-bottom: -99999px;\n  padding-bottom: 99999px;\n}\n#one-true .col:nth-child(1) { margin-left: 33.3%; background: #ccc; }\n#one-true .col:nth-child(2) { margin-left: -66.3%; background: #eee; }\n#one-true .col:nth-child(3) { left: 0; background: #eee; }\n#one-true p { margin-bottom: 30px; } /* Bottom padding on col is busy */\n"
+module.exports = "img {\n  width: 100%;\n  height: 100%;\n}\n.row{\n    color: #fff!important;\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex; /* equal height of the children */\n}\n.backgroundcolor {\n  background-color:black;\n}\nh3{\n    font-family: \"Roboto\", Helvetica;\n}\np{\n    font-family: \"Roboto\", Helvetica;\n}\n"
 
 /***/ }),
 
