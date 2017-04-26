@@ -10,14 +10,14 @@ export class TweetsService {
   getTweets(track_Id) {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    return this.http.get('http://ec2-35-167-19-138.us-west-2.compute.amazonaws.com/tweets/' + track_Id, { headers: headers })
+    return this.http.get('http://ec2-35-167-19-138.us-west-2.compute.amazonaws:8080/tweets/' + track_Id, { headers: headers })
       .map(res => res.json());
   }
 
   getCount(track_Id) {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    return this.http.get('http://ec2-35-167-19-138.us-west-2.compute.amazonaws.com/tweets/' + track_Id +'/count', { headers: headers })
+    return this.http.get('http://ec2-35-167-19-138.us-west-2.compute.amazonaws:8080/tweets/' + track_Id +'/count', { headers: headers })
       .map(res => res.json());
   }
 }
