@@ -238,7 +238,7 @@ var AppModule = (function () {
                 }),
                 __WEBPACK_IMPORTED_MODULE_4__angular_router__["a" /* RouterModule */].forRoot(appRoutes)
             ],
-            providers: [__WEBPACK_IMPORTED_MODULE_13__services_songs_service__["a" /* SongsService */], __WEBPACK_IMPORTED_MODULE_14__services_tweets_service__["a" /* TweetsService */],],
+            providers: [__WEBPACK_IMPORTED_MODULE_13__services_songs_service__["a" /* SongsService */], __WEBPACK_IMPORTED_MODULE_14__services_tweets_service__["a" /* TweetsService */]],
             bootstrap: [__WEBPACK_IMPORTED_MODULE_5__app_component__["a" /* AppComponent */]]
         }), 
         __metadata('design:paramtypes', [])
