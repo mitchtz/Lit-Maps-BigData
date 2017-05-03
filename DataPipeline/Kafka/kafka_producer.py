@@ -162,8 +162,12 @@ def worker(work_queue, kafka_settings, gnip_settings):
 	while not work_queue.empty():
 		song_info = work_queue.get()
 		#print("Working on:", item)
-		#Take in song info to retrieve, then retreive and send all responses to Kafka. Returns time of latest tweet retrieved
-		tweets = get_tweets(song_info, gnip_settings)
+		#Get tweets from GNIP search, loop until you get results
+		while True:
+			tweets = get_tweets(song_info, gnip_settings)
+			if len(tweets)>0:
+				break
+			time.sleep(5)
 		#Send tweets to kafka
 		kafka_push(kafka_settings, tweets)
 		#print("Done:", item)
