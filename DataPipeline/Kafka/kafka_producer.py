@@ -158,7 +158,7 @@ def kafka_push(kafka_settings, tweets):
 
 
 #Worker to manage thread, runs logic loop until all items have been pulled from queue
-def worker(work_queue, kafka_settings, gnip_settings):
+def worker(work_queue, kafka_settings, gnip_settings, done_queue):
 	while not work_queue.empty():
 		song_info = work_queue.get()
 		#print("Working on:", item)
@@ -167,9 +167,10 @@ def worker(work_queue, kafka_settings, gnip_settings):
 			tweets = get_tweets(song_info, gnip_settings)
 			if len(tweets)>0:
 				break
-			time.sleep(5)
+			time.sleep(10)
 		#Send tweets to kafka
 		kafka_push(kafka_settings, tweets)
+		done_queue.put([song_info["track_name"], len(tweets)])
 		#print("Done:", item)
 		work_queue.task_done()
 		print("Updated", song_info["track_name"], "| Responses:", len(tweets))
@@ -206,6 +207,8 @@ if __name__ == "__main__":
 	work_queue = Queue()
 	print("Retrieving song info and filling queue")
 	start = time.time()
+	#Queue to store all done songs and how many tweets were retreived
+	done_queue = Queue()
 
 	#Get list of songs and info about their last updates from mongo 
 	songs = get_top50(mongo_settings)
@@ -233,8 +236,15 @@ if __name__ == "__main__":
 	#Spawn Child processes. Off to the races!
 	for child in range(num_threads):
 		#Spawn child with target of worker function. Pass the combination queue, output queue, and list of csv data to worker (Maybe make this shared memory instead?)
-		threading.Thread(target=worker, args=[work_queue, kafka_settings, gnip_settings]).start()
+		threading.Thread(target=worker, args=[work_queue, kafka_settings, gnip_settings, done_queue]).start()
 
 	#Wait for all threads to finish work
 	work_queue.join()
+	total_tweets = 0
+	#Output the total number of tweets retrieved
+	while not done_queue.empty():
+		temp = done_queue.get()
+		total_tweets += temp[1]
+		print(temp)
+	print("Total tweets:", total_tweets)
 	print(time.time()-start, "seconds to run")
