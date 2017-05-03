@@ -14,16 +14,19 @@ def dict_to_bytes(dict_in):
 def response_parer_activity(res, song_info):
 	tweet_list = []
 	for i in res.json()["results"]:
-		temp_dict = {}
-		temp_dict["body"] = i["body"]
-		#temp_dict["gnip"] = i["gnip"]
-		#temp_dict["actor"] = i["actor"]
-		temp_dict["created_at"] = i["postedTime"]
-		temp_dict["location"] = i["location"]
-		temp_dict["tweet_id"] = i["id"].split(":")[2]
-		#temp_dict["prefUsername"] = i["actor"]["preferredUsername"]
-		temp_dict["track_id"] = song_info["track_id"]
-		tweet_list.append(temp_dict)
+		try:
+			temp_dict = {}
+			temp_dict["body"] = i["body"]
+			#temp_dict["gnip"] = i["gnip"]
+			#temp_dict["actor"] = i["actor"]
+			temp_dict["created_at"] = i["postedTime"]
+			temp_dict["location"] = i["location"]
+			temp_dict["tweet_id"] = i["id"].split(":")[2]
+			#temp_dict["prefUsername"] = i["actor"]["preferredUsername"]
+			temp_dict["track_id"] = song_info["track_id"]
+			tweet_list.append(temp_dict)
+		except:
+			pass
 	return tweet_list
 
 #Takes in a response from GNIP and returns a list of tweets with basic information persisted
