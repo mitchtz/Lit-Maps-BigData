@@ -26,22 +26,26 @@ def bytes_to_dict(bytes_in):
 
 #Takes in a tweet, calculates the center of the bounding box given as location
 def location_strip(twt):
-	#If using the original tweet format
-	if "place" in twt:
-		plc = twt["place"]
-		if "bounding_box" in plc:
-			box = plc["bounding_box"]["coordinates"][0]
-			lat = [i[0] for i in box]
-			lon = [i[1] for i in box]
-			return [sum(lat)/len(lat), sum(lon)/len(lon)]
-	#If using the activity stream format
-	if "location" in twt:
-		plc = twt["location"]["geo"]
-		if plc["type"] == "Polygon":
-			box = plc["coordinates"][0]
-			lat = [i[0] for i in box]
-			lon = [i[1] for i in box]
-			return [sum(lat)/len(lat), sum(lon)/len(lon)]
+	try:
+		#If using the original tweet format
+		if "place" in twt:
+			plc = twt["place"]
+			if "bounding_box" in plc:
+				box = plc["bounding_box"]["coordinates"][0]
+				lat = [i[0] for i in box]
+				lon = [i[1] for i in box]
+				return [sum(lat)/len(lat), sum(lon)/len(lon)]
+		#If using the activity stream format
+		if "location" in twt:
+			plc = twt["location"]["geo"]
+			if plc["type"] == "Polygon":
+				box = plc["coordinates"][0]
+				lat = [i[0] for i in box]
+				lon = [i[1] for i in box]
+				return [sum(lat)/len(lat), sum(lon)/len(lon)]
+		return [0]
+	except:
+		return [0]
 
 #Takes in tweet, analyzes sentiment for the tweet and return sentiment value
 def sentiment_analyze(twt):
@@ -97,20 +101,20 @@ def worker(kafka_settings, mongo_settings, partition):
 			tweet_out["created_at"] = tweet_in["created_at"]
 			#tweet_out["created_at_int"] = int(tweet_to_utc(tweet_in["created_at"])) #tweet_in["created_at"]
 			#Take in the coordinate box and average it to a single set of coordinates
-			
 			tweet_out["location"] = location_strip(tweet_in)
 			#Analyze sentiment
 			#tweet_out["sentiment"] = sentiment_analyze(tweet_in)
 			
 
-			#Insert/Update the tweet into Mongo
-			post_id = collection.update({"_id":tweet_out["tweet_id"]}, tweet_out, upsert=True)
-			if first:
-				print(tweet_in)
-				print("----------Processed----------------")
-				print("Wrote:", tweet_out)
-				print("Type:", type(tweet_out))
-				first = False
+			#Insert/Update the tweet into Mongo of the location could be retrieved
+			if len(tweet_out["location"]) > 1:
+				post_id = collection.update({"_id":tweet_out["tweet_id"]}, tweet_out, upsert=True)
+				if first:
+					print(tweet_in)
+					print("----------Processed----------------")
+					print("Wrote:", tweet_out)
+					print("Type:", type(tweet_out))
+					first = False
 				
 		'''
 		for j in tweet:
