@@ -130,7 +130,7 @@ if __name__ == "__main__":
 
 	#Kafka setting information
 	kafka_settings = {
-	"topic":"tweetqueue",
+	"topic":"tweets",
 	"partitions":5
 	}
 	num_threads = kafka_settings["partitions"]
